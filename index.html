@@ -38,6 +38,15 @@ body { margin: 0; background: var(--site-background); color: var(--text); font-f
 #app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; }
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
+.install-banner { display:none; align-items:center; gap:12px; margin:12px auto; width:calc(100% - 24px); max-width:760px; padding:13px 14px; border:1px solid #e7dfd5; border-radius:15px; background:#fffaf4; color:#29231f; box-shadow:0 8px 24px #1d281f18; }
+.install-banner.visible { display:flex; }
+.install-app-icon { width:46px; height:46px; flex:0 0 46px; display:grid; place-items:center; border-radius:12px; background:#173F35; color:#E8B95F; font-size:25px; font-weight:900; }
+.install-copy { min-width:0; flex:1; }
+.install-copy strong { display:block; font-size:15px; line-height:1.25; }
+.install-copy span { display:block; margin-top:3px; color:#746b63; font-size:12px; }
+.install-action { flex:0 0 auto; border:0; border-radius:10px; padding:10px 13px; background:#173F35; color:#fff; font-size:13px; font-weight:800; }
+.install-dismiss { align-self:flex-start; border:0; background:transparent; color:#746b63; padding:0 2px; font-size:20px; line-height:1; }
+@media(max-width:420px) { .install-banner { gap:9px; padding:11px; } .install-app-icon { width:40px; height:40px; flex-basis:40px; } .install-copy strong { font-size:14px; } .install-action { padding:9px 11px; } }
 .topbar { background: var(--site-primary); color: var(--site-on-primary); padding: calc(18px * var(--site-spacing-scale)) max(18px, calc((100vw - 1160px)/2)); display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .brand { display:flex; align-items:center; gap:11px; font-weight:800; letter-spacing:.2px; }
 .brandmark { width:39px; height:39px; border-radius:13px; background:var(--site-secondary); color:var(--site-on-secondary); display:grid; place-items:center; font-size:22px; font-weight:900; }
@@ -112,6 +121,12 @@ footer { text-align:center; color:var(--muted); font-size:11px; padding:16px; }
 </head>
 <body>
 <div id="app">
+<section class="install-banner" id="installBanner" aria-label="Installer Sika Coach">
+  <div class="install-app-icon" aria-hidden="true">S</div>
+  <div class="install-copy"><strong>Installer Sika Coach</strong><span>Accède à ton coach directement depuis ton téléphone.</span></div>
+  <button class="install-action" id="installBannerButton" type="button">Installer</button>
+  <button class="install-dismiss" id="installBannerDismiss" type="button" aria-label="Fermer">×</button>
+</section>
 <header class="topbar">
   <div class="brand"><div class="brandmark">S</div><div><div>SIKA SKILLS</div><div style="font-size:10px;font-weight:500;opacity:.75">OBJECTIF 1 MILLION</div></div></div>
   <div class="top-actions"><button id="todayBtn">Aujourd'hui</button><button id="exportBtn">Sauvegarder mes progrès</button><button id="importBtn">Restaurer</button><input id="importFile" type="file" accept="application/json" hidden><button id="installBtn" hidden>Installer</button></div>
@@ -260,7 +275,7 @@ $('addSale').addEventListener('click',()=>{const amount=Number($('saleAmount').v
 $('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({state,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sika-suivi-objectif-1m.json';a.click();URL.revokeObjectURL(url)});
 $('importBtn').addEventListener('click',()=>$('importFile').click());
 $('importFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;try{const backup=JSON.parse(await f.text());const restored=backup.state||backup;if(!restored||typeof restored!=='object'||!restored.checks||!Array.isArray(restored.sales))throw new Error('invalid');if(!confirm('Restaurer cette sauvegarde ? Les données présentes seront remplacées.'))return;state=restored;state.checks=state.checks||{};state.notes=state.notes||{};state.sales=state.sales||[];state.goal=state.goal||1000000;save();renderAll();alert('Sauvegarde restaurée avec succès.');}catch(err){alert('Fichier invalide : sélectionne une sauvegarde Sika Skills.')}finally{e.target.value=''}});
-let installPrompt=null;const installBtn=$('installBtn');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;installBtn.hidden=false});installBtn.addEventListener('click',async()=>{if(!installPrompt){alert('Sur Android : ouvre le menu du navigateur puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil ».');return;}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installBtn.hidden=true});window.addEventListener('appinstalled',()=>{installBtn.hidden=true;});
+let installPrompt=null;const installBtn=$('installBtn');const installBanner=$('installBanner');const installBannerButton=$('installBannerButton');const installBannerDismiss=$('installBannerDismiss');const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;const isAndroid=/Android/i.test(navigator.userAgent);if(!isStandalone&&isAndroid&&!sessionStorage.getItem('sikaInstallBannerDismissed'))installBanner.classList.add('visible');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;installBtn.hidden=false;installBanner.classList.add('visible')});async function requestAppInstall(){if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice&&choice.outcome==='accepted'){installBanner.classList.remove('visible');installBtn.hidden=true;}installPrompt=null;return;}alert('Pour installer Sika Coach : ouvre le menu ⋮ de Chrome, puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil ».');}installBannerButton.addEventListener('click',requestAppInstall);installBtn.addEventListener('click',requestAppInstall);installBannerDismiss.addEventListener('click',()=>{installBanner.classList.remove('visible');sessionStorage.setItem('sikaInstallBannerDismissed','1')});window.addEventListener('appinstalled',()=>{installBtn.hidden=true;installBanner.classList.remove('visible')});
 if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service worker',err)));
 
 function timerRender(){const h=String(Math.floor(timerSeconds/3600)).padStart(2,'0'),m=String(Math.floor(timerSeconds%3600/60)).padStart(2,'0'),s=String(timerSeconds%60).padStart(2,'0');$('timerDisplay').textContent=`${h}:${m}:${s}`;}
