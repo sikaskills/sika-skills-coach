@@ -23,17 +23,17 @@
   --site-spacing-scale: 1;
   --site-radius-scale: 1;
   --site-decoration-opacity: 1;
-  --surface: light-dark(#FFFFFF,#1D2824);
-  --surface-soft: light-dark(#EEF1EB,#27352F);
-  --text: light-dark(#202820,#F1F4EF);
-  --muted: light-dark(#657269,#B5C0B8);
-  --line: light-dark(#DDE3DA,#3D4B44);
+  --surface: #FFFFFF;
+  --surface-soft: #EEF1EB;
+  --text: #202820;
+  --muted: #59665E;
+  --line: #DDE3DA;
   --success: #287A52;
   --warning: #A76518;
   --danger: #A8433A;
 }
 * { box-sizing: border-box; }
-html { color-scheme: light dark; }
+html { color-scheme: light; }
 body { margin: 0; background: var(--site-background); color: var(--text); font-family: var(--site-font-body); }
 #app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; }
 button, input, textarea, select { font: inherit; }
@@ -85,13 +85,13 @@ h1,h2,h3 { font-family:var(--site-font-heading); }
 .task { border-top:1px solid var(--line); padding:14px 0; }
 .task-top { display:flex; gap:10px; align-items:flex-start; }
 .task input[type=checkbox] { width:19px; height:19px; accent-color:var(--success); flex-shrink:0; margin-top:2px; }
-.task-title { font-weight:750; line-height:1.35; }
+.task-title { color:#202820; font-weight:750; line-height:1.35; }
 .task.done .task-title { text-decoration:line-through; color:var(--muted); }
 .task-meta { color:var(--muted); font-size:11px; margin-top:4px; }
 .substeps { margin:10px 0 0 29px; padding-left:12px; border-left:2px solid var(--line); }
-.substep { display:flex; gap:8px; align-items:flex-start; padding:5px 0; font-size:13px; line-height:1.4; }
+.substep { color:#26332B; display:flex; gap:8px; align-items:flex-start; padding:5px 0; font-size:13px; line-height:1.4; }
 .substep input { accent-color:var(--success); margin-top:2px; }
-.detail { margin:9px 0 0 29px; background:var(--surface-soft); padding:11px 12px; border-radius:11px; font-size:12px; line-height:1.55; }
+.detail { color:#26332B; margin:9px 0 0 29px; background:var(--surface-soft); padding:11px 12px; border-radius:11px; font-size:12px; line-height:1.55; }
 .detail b { display:block; margin-bottom:3px; }
 .btn { border:0; border-radius:11px; padding:10px 13px; font-weight:750; font-size:12px; background:var(--site-primary); color:white; }
 .btn.secondary { background:var(--surface-soft); color:var(--text); border:1px solid var(--line); }
@@ -109,7 +109,7 @@ h1,h2,h3 { font-family:var(--site-font-heading); }
 .week-item span { color:var(--muted); font-size:11px; }
 .content-card { border:1px solid var(--line); background:var(--surface); border-radius:14px; padding:14px; margin:10px 0; }
 .content-card textarea { min-height:125px; }
-.timer-display { font-size:36px; font-weight:850; font-variant-numeric:tabular-nums; margin:10px 0; }
+.timer-display { color:#173F35; font-size:36px; font-weight:850; font-variant-numeric:tabular-nums; margin:10px 0; }
 .notice { background:#E8B95F22; border-left:3px solid var(--warning); padding:11px 13px; border-radius:8px; color:var(--text); font-size:12px; line-height:1.5; }
 .sales-row { display:grid; grid-template-columns:1.2fr .8fr .7fr auto; gap:8px; align-items:end; }
 .small { font-size:11px; color:var(--muted); }
@@ -212,7 +212,7 @@ for(let i=0;i<58;i++) { const d=new Date(start); d.setDate(start.getDate()+i); d
 const fmt=d=>new Intl.DateTimeFormat('fr-FR',{weekday:'long',day:'numeric',month:'long'}).format(d);
 const weeks=[];
 let cursor=0;
-for(let w=0;w<9;w++) { const n=w===8?2:7; const days=[]; for(let j=0;j<n;j++,cursor++){ const title=(dayTitles[w]||[])[j]||'Faire le point et avancer sur la priorité commerciale'; let tasks=[]; if(w===0) tasks=(tasksByDay[0][j]||[]); else if(w===1) tasks=(tasksByDay[1][j]||[]); else { const titleLower=title.toLowerCase(); const type=titleLower.includes('publier')||titleLower.includes('contenu')||titleLower.includes('vidéo')||titleLower.includes('visuel')?0:titleLower.includes('contacter')||titleLower.includes('prospection')||titleLower.includes('relance')?1:2; const subs=genericSub[type]; tasks=[
+for(let w=0;w<9;w++) { const n=w===8?2:7; const days=[]; for(let j=0;j<n;j++,cursor++){ const title=(dayTitles[w]||[])[j]||'Faire le point et avancer sur la priorité commerciale'; let tasks=[]; if(w===0) tasks=tasksByDay[0][j]?[tasksByDay[0][j]]:[]; else if(w===1) tasks=tasksByDay[1][j]?[tasksByDay[1][j]]:[]; else { const titleLower=title.toLowerCase(); const type=titleLower.includes('publier')||titleLower.includes('contenu')||titleLower.includes('vidéo')||titleLower.includes('visuel')?0:titleLower.includes('contacter')||titleLower.includes('prospection')||titleLower.includes('relance')?1:2; const subs=genericSub[type]; tasks=[
 ['Préparer l’action : '+title.toLowerCase(),35,subs,'Consulte les consignes de la semaine et utilise les modèles de l’atelier.'],
 ['Réaliser l’action principale',60,['Choisir le canal ou l’outil adapté.','Faire l’action prévue sans chercher à tout perfectionner.','Vérifier que le contenu, le message ou le lien est correct.','Noter le résultat concret obtenu.'],'Canaux : WhatsApp, Facebook, TikTok et Instagram selon le format.'],
 ['Conversations et suivi commercial',60,['Répondre aux messages reçus.','Contacter quelques prospects réellement pertinents avec un message adapté.','Faire les relances demandées ou attendues, sans insister.','Noter les objections et les demandes de précision.'],'Respecte les refus et les préférences de contact.'],
@@ -258,9 +258,51 @@ function restoreIndexedDBIfEmpty(){if(localStorage.getItem(STORE))return;try{con
 const allDays=PLAN.weeks.flatMap(w=>w.days);
 const todayIndex=()=>{const now=new Date(); const key=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0'); const found=allDays.findIndex(d=>d.date===key); return found>=0?found:0;};
 function setView(name){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$('view-'+name).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===name));}
-function taskStats(day){let total=0,done=0;day.tasks.forEach(t=>{total+=1+t.steps.length;if(state.checks[t.id])done++;t.steps.forEach((_,i)=>{if(state.checks[t.id+'s'+i])done++})});return {total,done,pct:total?Math.round(done/total*100):0};}
-function renderDay(){const day=allDays[selectedDay];const week=PLAN.weeks.find(w=>w.days.some(d=>d.index===selectedDay));$('dayDate').textContent='JOUR '+(selectedDay+1)+' · '+day.label;$('dayTitle').textContent=day.title;$('dayAim').textContent=day.aim;$('dayWeek').textContent='Semaine '+week.number;$('dayMinutes').textContent=Math.floor(day.minutes/60)+' h '+(day.minutes%60?day.minutes%60+' min':'');const st=taskStats(day);$('dayTaskCount').textContent=st.done+'/'+st.total;$('dayProgress').textContent=st.pct+' %';$('priorityText').textContent=day.tasks[0]?.detail||day.aim;
-$('taskList').innerHTML=day.tasks.map(t=>{const main=!!state.checks[t.id];return `<div class="task ${main?'done':''}"><div class="task-top"><input type="checkbox" data-check="${t.id}" ${main?'checked':''}><div><div class="task-title">${t.title}</div><div class="task-meta">⏱ ${t.minutes} min · ${t.steps.length} petites étapes</div></div></div><div class="substeps">${t.steps.map((x,i)=>`<label class="substep"><input type="checkbox" data-check="${t.id}s${i}" ${state.checks[t.id+'s'+i]?'checked':''}><span>${x}</span></label>`).join('')}</div><div class="detail"><b>Comment faire / où aller</b>${t.detail}</div></div>`}).join('');document.querySelectorAll('[data-check]').forEach(el=>el.addEventListener('change',()=>{state.checks[el.dataset.check]=el.checked;save();renderDay();renderHeader();}));const note=state.notes[day.date]||{};$('dayNote').value=note.note||'';$('dayBlock').value=note.block||'';}
+function normalizeDay(day){
+  const tasks=Array.isArray(day?.tasks)?day.tasks:[];
+  const safeTasks=tasks.map((task,index)=>{
+    const steps=Array.isArray(task?.steps)?task.steps.filter(x=>x!==null&&x!==undefined).map(x=>String(x)):[];
+    return {id:String(task?.id||`d${day?.index??0}t${index}`),title:String(task?.title||task?.name||'Action à réaliser'),minutes:Number.isFinite(Number(task?.minutes))?Number(task.minutes):0,steps,detail:String(task?.detail||'Réalise cette action, vérifie le résultat puis note ce qui reste à faire.')};
+  });
+  const minutes=Number.isFinite(Number(day?.minutes))?Number(day.minutes):safeTasks.reduce((sum,t)=>sum+t.minutes,0);
+  return {...day,title:String(day?.title||'Journée de travail'),label:String(day?.label||'Date à préciser'),aim:String(day?.aim||'Avance sur les actions prévues.'),minutes,tasks:safeTasks};
+}
+allDays.forEach((day,index)=>{allDays[index]=normalizeDay(day);});
+function taskStats(day){
+  const tasks=Array.isArray(day?.tasks)?day.tasks:[];
+  let total=0,done=0;
+  tasks.forEach(t=>{
+    total+=1+t.steps.length;
+    if(state.checks[t.id])done++;
+    t.steps.forEach((_,i)=>{if(state.checks[t.id+'s'+i])done++;});
+  });
+  return {total,done,pct:total?Math.round(done/total*100):0};
+}
+function renderDay(){
+  const day=allDays[selectedDay]||allDays[0];
+  if(!day)return;
+  const week=PLAN.weeks.find(w=>w.days.some(d=>d.index===selectedDay))||PLAN.weeks[0]||{number:1};
+  const minutes=Number.isFinite(day.minutes)?day.minutes:day.tasks.reduce((sum,t)=>sum+(Number(t.minutes)||0),0);
+  $('dayDate').textContent='JOUR '+(selectedDay+1)+' · '+day.label;
+  $('dayTitle').textContent=day.title;
+  $('dayAim').textContent=day.aim;
+  $('dayWeek').textContent='Semaine '+week.number;
+  $('dayMinutes').textContent=Math.floor(minutes/60)+' h '+(minutes%60?minutes%60+' min':'');
+  const st=taskStats(day);
+  $('dayTaskCount').textContent=st.done+'/'+st.total;
+  $('dayProgress').textContent=st.pct+' %';
+  $('priorityText').textContent=day.tasks[0]?.detail||day.aim;
+  $('taskList').innerHTML=day.tasks.map(t=>{
+    const main=!!state.checks[t.id];
+    return `<div class="task ${main?'done':''}"><div class="task-top"><input type="checkbox" data-check="${t.id}" ${main?'checked':''}><div><div class="task-title">${t.title}</div><div class="task-meta">⏱ ${t.minutes} min · ${t.steps.length} petites étapes</div></div></div><div class="substeps">${t.steps.map((x,i)=>`<label class="substep"><input type="checkbox" data-check="${t.id}s${i}" ${state.checks[t.id+'s'+i]?'checked':''}><span>${x}</span></label>`).join('')}</div><div class="detail"><b>Comment faire / où aller</b>${t.detail}</div></div>`;
+  }).join('');
+  document.querySelectorAll('[data-check]').forEach(el=>el.addEventListener('change',()=>{
+    state.checks[el.dataset.check]=el.checked;save();renderDay();renderHeader();renderWeeks();
+  }));
+  const note=state.notes[day.date]||{};
+  $('dayNote').value=note.note||'';
+  $('dayBlock').value=note.block||'';
+}
 function renderHeader(){const total=state.sales.reduce((a,s)=>a+s.amount,0);const pct=Math.min(100,total/Math.max(1,state.goal)*100);$('heroRevenue').textContent=money(total);$('heroPercent').textContent=Math.round(pct)+' % de l’objectif';$('heroProgress').style.width=pct+'%';$('salesTotal').textContent=money(total);$('salesCount').textContent=state.sales.length;$('averageSale').textContent=money(state.sales.length?total/state.sales.length:0);$('remainingAmount').textContent=money(Math.max(0,state.goal-total));$('salesProgress').style.width=pct+'%';$('goalInput').value=state.goal;}
 function renderWeeks(){ $('weekList').innerHTML=PLAN.weeks.map((w,i)=>`<button class="week-item ${i===selectedWeek?'active':''}" data-week="${i}"><strong>Semaine ${w.number} · ${money(w.target)}</strong><span>${w.start} — ${w.end}</span></button>`).join('');document.querySelectorAll('[data-week]').forEach(b=>b.addEventListener('click',()=>{selectedWeek=+b.dataset.week;renderWeeks()}));const w=PLAN.weeks[selectedWeek];$('weekHeading').textContent='Semaine '+w.number+' — '+w.name;$('weekDescription').textContent=w.description;$('weekDays').innerHTML=w.days.map(d=>{const st=taskStats(d);return `<div class="content-card"><div class="day-head"><div><b>${d.label}</b><div class="muted">${d.title}</div></div><span class="pill">${st.pct}%</span></div><div class="btn-row"><button class="btn secondary" data-open-day="${d.index}">Ouvrir cette journée</button></div></div>`}).join('');document.querySelectorAll('[data-open-day]').forEach(b=>b.addEventListener('click',()=>{selectedDay=+b.dataset.openDay;setView('today');renderDay()}));$('weeklyTargets').innerHTML=PLAN.weeks.map(w=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px"><span>S${w.number} · ${w.name}</span><b>${money(w.target)}</b></div>`).join('');}
 function renderTemplates(){ $('templateSelect').innerHTML=templates.map((t,i)=>`<option value="${i}">${t.title}</option>`).join('');$('contentEditor').value=templates[0].text;$('publishChecks').innerHTML=['Le texte correspond au vrai contenu du guide.','Le prix et la période de promotion sont exacts.','Le lien Chariow a été testé.','Le visuel est lisible sur un téléphone.','Aucune vente ou promesse de résultat n’est inventée.'].map((x,i)=>`<label class="substep"><input type="checkbox" data-pub="${i}"><span>${x}</span></label>`).join('');}
@@ -278,8 +320,37 @@ $('importFile').addEventListener('change',async e=>{const f=e.target.files&&e.ta
 let installPrompt=null;const installBtn=$('installBtn');const installBanner=$('installBanner');const installBannerButton=$('installBannerButton');const installBannerDismiss=$('installBannerDismiss');const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;const isAndroid=/Android/i.test(navigator.userAgent);if(!isStandalone&&isAndroid&&!sessionStorage.getItem('sikaInstallBannerDismissed'))installBanner.classList.add('visible');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;installBtn.hidden=false;installBanner.classList.add('visible')});async function requestAppInstall(){if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice&&choice.outcome==='accepted'){installBanner.classList.remove('visible');installBtn.hidden=true;}installPrompt=null;return;}alert('Pour installer Sika Coach : ouvre le menu ⋮ de Chrome, puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil ».');}installBannerButton.addEventListener('click',requestAppInstall);installBtn.addEventListener('click',requestAppInstall);installBannerDismiss.addEventListener('click',()=>{installBanner.classList.remove('visible');sessionStorage.setItem('sikaInstallBannerDismissed','1')});window.addEventListener('appinstalled',()=>{installBtn.hidden=true;installBanner.classList.remove('visible')});
 if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service worker',err)));
 
-function timerRender(){const h=String(Math.floor(timerSeconds/3600)).padStart(2,'0'),m=String(Math.floor(timerSeconds%3600/60)).padStart(2,'0'),s=String(timerSeconds%60).padStart(2,'0');$('timerDisplay').textContent=`${h}:${m}:${s}`;}
-$('timerStart').addEventListener('click',()=>{if(timerInterval)return;timerInterval=setInterval(()=>{timerSeconds++;timerRender()},1000);$('timerStatus').textContent='Séance en cours…'});$('timerPause').addEventListener('click',()=>{clearInterval(timerInterval);timerInterval=null;$('timerStatus').textContent='Séance en pause.'});$('timerReset').addEventListener('click',()=>{clearInterval(timerInterval);timerInterval=null;timerSeconds=0;timerRender();$('timerStatus').textContent='Chronomètre réinitialisé.'});
+let timerStartedAt=0;
+function timerRender(){
+  const h=String(Math.floor(timerSeconds/3600)).padStart(2,'0');
+  const m=String(Math.floor((timerSeconds%3600)/60)).padStart(2,'0');
+  const s=String(timerSeconds%60).padStart(2,'0');
+  const display=$('timerDisplay');
+  if(display)display.textContent=`${h}:${m}:${s}`;
+}
+function timerTick(){
+  if(!timerStartedAt)return;
+  timerSeconds=Math.max(0,Math.floor((Date.now()-timerStartedAt)/1000));
+  timerRender();
+}
+$('timerStart').addEventListener('click',()=>{
+  if(timerInterval)return;
+  timerStartedAt=Date.now()-timerSeconds*1000;
+  timerInterval=setInterval(timerTick,250);
+  timerTick();
+  $('timerStatus').textContent='Séance en cours…';
+});
+$('timerPause').addEventListener('click',()=>{
+  if(timerInterval){timerTick();clearInterval(timerInterval);}
+  timerInterval=null;timerStartedAt=0;
+  $('timerStatus').textContent='Séance en pause.';
+});
+$('timerReset').addEventListener('click',()=>{
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=null;timerStartedAt=0;timerSeconds=0;timerRender();
+  $('timerStatus').textContent='Chronomètre réinitialisé.';
+});
+timerRender();
 renderAll();
 restoreIndexedDBIfEmpty();
 </script>
