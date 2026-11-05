@@ -14,7 +14,7 @@ Application web progressive (PWA) conçue pour être publiée avec **GitHub Page
 
 ## Base de données en ligne (préparation Supabase)
 
-Le dossier `supabase/` et le guide `DATABASE_SUPABASE.md` sont inclus. Ils fournissent le schéma SQL avec règles RLS et un exemple de configuration. **La base n’est pas encore créée ni connectée à l’application** : il faudra créer ton projet Supabase et terminer le raccordement de l’authentification et de la synchronisation. Ne publie jamais une clé `service_role`.
+La connexion Supabase, l’inscription/connexion par e-mail et la synchronisation des données sont intégrées. Le schéma SQL et les étapes de configuration Auth figurent dans `supabase/schema.sql` et `DATABASE_SUPABASE.md`. La synchronisation réelle doit être validée après publication sur GitHub Pages. Ne publie jamais une clé `secret` ou `service_role`.
 
 ## Sauvegarde des progrès
 
