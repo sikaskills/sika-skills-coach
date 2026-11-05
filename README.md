@@ -10,11 +10,11 @@ Application web progressive (PWA) conçue pour être publiée avec **GitHub Page
 4. Ouvre **Settings → Pages**.
 5. Dans **Build and deployment**, choisis **Deploy from a branch**, branche `main`, dossier `/ (root)`, puis **Save**.
 6. Attends la publication et ouvre l’adresse GitHub Pages indiquée dans cette page.
-7. Sur Android avec Chrome : ouvre l’adresse HTTPS, menu ⋮, puis **Installer l’application** ou **Ajouter à l’écran d’accueil**.
+7. Sur Android avec Chrome : si le bouton **Installer** déclenche la fenêtre native, confirme l’installation. Si Chrome ne fournit pas cette fenêtre, ouvre le menu ⋮ puis **Installer l’application** ou **Ajouter à l’écran d’accueil**. Un site web ne peut pas contourner la confirmation du navigateur.
 
 ## Base de données en ligne (préparation Supabase)
 
-La connexion Supabase, l’inscription/connexion par e-mail et la synchronisation des données sont intégrées. Le schéma SQL et les étapes de configuration Auth figurent dans `supabase/schema.sql` et `DATABASE_SUPABASE.md`. La synchronisation réelle doit être validée après publication sur GitHub Pages. Ne publie jamais une clé `secret` ou `service_role`.
+La connexion Supabase, l’inscription/connexion par e-mail et la synchronisation des données sont intégrées dans `index.html`. Le schéma SQL est dans `supabase/schema.sql`. Après publication, teste la création du compte, la connexion et la récupération sur un second appareil. Ne publie jamais une clé `secret` ou `service_role`.
 
 ## Sauvegarde des progrès
 
